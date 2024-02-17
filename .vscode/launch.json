@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "FastAPI: planner",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "planner.main:app",
+                "--reload"
+            ],
+            "jinja": true
+        },
+        {
             "name": "FastAPI: application",
             "type": "debugpy",
             "request": "launch",
