@@ -20,6 +20,6 @@ def client(app: FastAPI) -> Generator[TestClient, None, None]:
 
 
 def test_health_check(client: TestClient) -> None:
-    response = client.get("/health-check")
+    response = client.get("/health")
 
     assert response.status_code == 200

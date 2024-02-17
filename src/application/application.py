@@ -1,3 +1,5 @@
+from typing import Dict
+
 from fastapi import FastAPI
 
 
@@ -5,11 +7,11 @@ def create_app() -> FastAPI:
     app = FastAPI()
 
     @app.get("/")
-    def hello_world() -> str:
-        return "Hello, World!"
+    def hello_world() -> Dict[str, str]:
+        return {"message": "Hello, World!"}
 
-    @app.get("/health-check")
-    async def health_check() -> str:
-        return "OK"
+    @app.get("/health")
+    async def health_check() -> Dict[str, str]:
+        return {"message": "ok"}
 
     return app

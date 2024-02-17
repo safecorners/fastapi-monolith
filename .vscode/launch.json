@@ -5,13 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: FastAPI",
-            "type": "python",
+            "name": "FastAPI: application",
+            "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "env": {},
             "args": [
                 "application.asgi:app",
+                "--port",
+                "8000",
                 "--reload"
             ],
             "jinja": true,
