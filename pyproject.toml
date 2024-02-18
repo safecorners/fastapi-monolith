@@ -12,8 +12,13 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.109.2"
-pydantic = {extras = ["email"], version = "^2.6.1"}
 uvicorn = {extras = ["standard"], version = "^0.21.1"}
+pydantic = {extras = ["email", "dotev"], version = "1.10.14"}
+beanie = "1.13.1"
+passlib = {version = "^1.7.4", extras = ["bcrypt"]}
+python-jose = {version = "^3.3.0", extras = ["cryptography"]}
+python-multipart = "^0.0.9"
+bcrypt = "4.0.1"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.2"

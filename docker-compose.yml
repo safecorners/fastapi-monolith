@@ -9,3 +9,8 @@ services:
     image: fastapi-app
     ports:
       - "8000:8000"
+  
+  mongod:
+    image: mongo:5.0.15
+    ports:
+      - "27017:27017"

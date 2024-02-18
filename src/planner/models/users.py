@@ -1,13 +1,13 @@
 from typing import List, Optional
 
+from beanie import Document, Link
 from pydantic import BaseModel, EmailStr
 
 from planner.models.events import Event
 
 
-class User(BaseModel):
+class User(Document):
     email: EmailStr
-    username: str
     password: str
     events: Optional[List[Event]] = None
 
@@ -19,6 +19,9 @@ class User(BaseModel):
                 "events": [],
             }
         }
+
+    class Settings:
+        name = "users"
 
 
 class UserSignIn(BaseModel):
@@ -33,3 +36,8 @@ class UserSignIn(BaseModel):
                 "events": [],
             }
         }
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
