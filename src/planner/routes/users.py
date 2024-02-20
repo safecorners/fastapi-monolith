@@ -30,7 +30,7 @@ async def sign_new_user(user: User) -> Dict[str, str]:
     print(f"{user.email},{user.password}")
     await user_database.save(user)
 
-    return {"message": "User successfully registerd!"}
+    return {"message": "User created successfully."}
 
 
 @user_router.post("/signin", response_model=TokenResponse)
