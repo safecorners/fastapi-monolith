@@ -1,35 +1,14 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr
+from sqlalchemy.orm import Mapped, mapped_column
 
+from planner.database import Base
 from planner.models.events import Event
 
 
-class User(BaseModel):
-    email: EmailStr
-    username: str
-    password: str
-    events: Optional[List[Event]] = None
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "email": "fastapi@packt.com",
-                "username": "username",
-                "events": [],
-            }
-        }
-
-
-class UserSignIn(BaseModel):
-    email: EmailStr
-    password: str
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "email": "fastapi@packt.com",
-                "password": "strong-password",
-                "events": [],
-            }
-        }
+class User(Base):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    email: Mapped[str] = mapped_column(index=True)
+    username: Mapped[str] = mapped_column(nullable=False)
+    password: Mapped[str] = mapped_column(nullable=False)
+    events: Mapped[Optional[List[Event]]] = mapped_column(default=None)

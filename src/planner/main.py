@@ -18,8 +18,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(user_router, prefix="/user")
-app.include_router(event_router, prefix="/event")
+app.include_router(user_router, prefix="/users")
+app.include_router(event_router, prefix="/events")
 
 
 @app.get("/")

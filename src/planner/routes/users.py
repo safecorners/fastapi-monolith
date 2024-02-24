@@ -2,7 +2,8 @@ from typing import Dict
 
 from fastapi import APIRouter, HTTPException, status
 
-from planner.models.users import User, UserSignIn
+from planner.schemas.users import User as UserSchema
+from planner.schemas.users import UserSignIn as UserSignInSchema
 
 user_router = APIRouter(
     tags=["User"],
@@ -12,7 +13,7 @@ users = {}
 
 
 @user_router.post("/signup")
-async def sign_new_user(data: User) -> Dict[str, str]:
+async def sign_new_user(data: UserSchema) -> Dict[str, str]:
     if data.email in users:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -23,7 +24,7 @@ async def sign_new_user(data: User) -> Dict[str, str]:
 
 
 @user_router.post("/signin")
-async def sign_user_in(user: UserSignIn) -> Dict[str, str]:
+async def sign_user_in(user: UserSignInSchema) -> Dict[str, str]:
     if user.email not in users:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist"
