@@ -1,16 +1,13 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnType": true,
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": "always"
         }
     },
+    "ruff.importStrategy": "fromEnvironment",
     "mypy-type-checker.importStrategy": "fromEnvironment",
-    "flake8.importStrategy": "fromEnvironment",
-    "black-formatter.importStrategy": "fromEnvironment",
-    "isort.importStrategy": "fromEnvironment",
     "python.testing.pytestArgs": [
         "tests"
     ],
