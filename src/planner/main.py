@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncIterator, Dict
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from planner.database import sessionmanager
 from planner.database.init_db import init_db
@@ -22,6 +23,14 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(user_router, prefix="/users")
 app.include_router(event_router, prefix="/events")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/status")
