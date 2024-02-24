@@ -1,14 +1,14 @@
 from typing import List, Optional
 
-from sqlmodel import JSON, Column, Field, SQLModel
+from pydantic import BaseModel
 
 
-class Event(SQLModel):
-    id: int = Field(default=None, primary_key=True)
+class Event(BaseModel):
+    id: int
     title: str
     image: str
     description: str
-    tags: List[str] = Field(sa_column=Column(JSON))
+    tags: List[str]
     location: str
 
     class Config:
@@ -24,7 +24,7 @@ class Event(SQLModel):
         }
 
 
-class EventUpdate(SQLModel):
+class EventUpdate(BaseModel):
     title: Optional[str]
     image: Optional[str]
     description: Optional[str]

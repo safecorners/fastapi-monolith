@@ -1,5 +1,6 @@
 from typing import List
 
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import JSON
 
@@ -10,8 +11,9 @@ class Event(Base):
     __tablename__ = "events"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str]
     image: Mapped[str]
     description: Mapped[str]
     tags: Mapped[List[str]] = mapped_column(type_=JSON)
-    location: str
+    location: Mapped[str]
