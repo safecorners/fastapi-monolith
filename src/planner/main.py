@@ -4,15 +4,16 @@ from typing import AsyncIterator
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from planner.database.connection import conn
+from planner.database import sessionmanager
 from planner.routes.events import event_router
 from planner.routes.users import user_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    conn()
     yield
+    if sessionmanager._engine is not None:
+        await sessionmanager.close()
 
 
 app = FastAPI(lifespan=lifespan)
