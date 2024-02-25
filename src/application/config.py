@@ -1,4 +1,4 @@
-from pydantic import Field, PostgresDsn, computed_field
+from pydantic import Field, PostgresDsn, SerializeAsAny, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,11 +13,12 @@ class PostgresSettings(BaseSettings):
 
     @computed_field  # type: ignore[misc]
     @property
-    def url(self) -> PostgresDsn:
-        return PostgresDsn(
+    def url(self) -> str:
+        _dsn = PostgresDsn(
             f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
         )
+        return str(_dsn)
 
 
 class Settings(BaseSettings):
-    db: BaseSettings = PostgresSettings()
+    postgres: SerializeAsAny[PostgresSettings] = PostgresSettings()
