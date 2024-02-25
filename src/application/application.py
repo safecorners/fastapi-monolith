@@ -1,17 +1,19 @@
-from typing import Dict
-
 from fastapi import FastAPI
+
+from application import endpoints
+from application.containers import create_container
 
 
 def create_app() -> FastAPI:
+    container = create_container()
+
+    db = container.db()
+    db.create_database()
+
     app = FastAPI()
-
-    @app.get("/")
-    def hello_world() -> Dict[str, str]:
-        return {"message": "Hello, World!"}
-
-    @app.get("/health")
-    async def health_check() -> Dict[str, str]:
-        return {"message": "ok"}
-
+    app.container = container
+    app.include_router(endpoints.router)
     return app
+
+
+app = create_app()
