@@ -8,6 +8,7 @@
     },
     "ruff.importStrategy": "fromEnvironment",
     "mypy-type-checker.importStrategy": "fromEnvironment",
+    "mypy-type-checker.reportingScope": "workspace",
     "python.testing.pytestArgs": [
         "tests"
     ],
