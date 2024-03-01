@@ -1,11 +1,11 @@
 import logging
 
-from application.containers import create_container
+from application.containers import Container, create_container
 
 logger = logging.getLogger(__name__)
 
 
 def test_configuration() -> None:
-    container = create_container()
+    container:Container = create_container()
 
     logger.info(f"postgres_url={container.config.postgres.url()}")

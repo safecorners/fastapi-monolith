@@ -2,8 +2,8 @@ from dependency_injector import containers, providers
 
 from application.config import Settings
 from application.database import Database
-from application.repositories import UserRepository
-from application.services import UserService
+from application.repositories import EventRepository, UserRepository
+from application.services import EventService, UserService
 
 
 class Container(containers.DeclarativeContainer):
@@ -21,13 +21,24 @@ class Container(containers.DeclarativeContainer):
         session_factory=db.provided.session,
     )
 
+    event_repository = providers.Factory(
+        EventRepository,
+        session_factory=db.provided.session,
+    )
+
     user_service = providers.Factory(
         UserService,
         user_repository=user_repository,
     )
 
+    event_service = providers.Factory(
+        EventService,
+        event_repository=event_repository
+    )
 
-def create_container() -> containers.DeclarativeContainer:
+
+
+def create_container() -> Container:
     container = Container()
     settings = Settings()
     container.config.from_dict(settings.model_dump())

@@ -1,14 +1,10 @@
 import contextlib
-from typing import AsyncIterator, Optional, Unpack
+from typing import AsyncIterator, Optional
 
-from sqlalchemy.ext.asyncio import (
-    AsyncConnection,
-    AsyncEngine,
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
+from sqlalchemy.ext.asyncio import (AsyncConnection, AsyncEngine, AsyncSession,
+                                    async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import declarative_base
+from typing_extensions import Unpack
 
 from planner.config import DatabaseSettings
 
@@ -67,4 +63,5 @@ sessionmanager = SQLAlchemyDatabase(
 
 async def get_db_session() -> AsyncSession:
     async with sessionmanager.session() as session:
+        yield session
         yield session

@@ -7,3 +7,6 @@ class NotFoundError(Exception):
 
 class UserNotFoundError(NotFoundError):
     entity_name: str = "User"
+
+class EventNotFoundError(NotFoundError):
+    entity_name: str = "Event"
