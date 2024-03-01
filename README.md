@@ -3,7 +3,7 @@
 ## Todo
 
 - [ ] Remove Dynamically Attributes Errors
-- [ ] Isolate Test Cases
+- [ ] Isolate Individual Test Cases
 
 ## Links
 
