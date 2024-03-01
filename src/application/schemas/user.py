@@ -1,8 +1,4 @@
-from typing import List, Optional
-
 from pydantic import BaseModel, EmailStr
-
-from planner.schemas.events import Event
 
 
 class User(BaseModel):

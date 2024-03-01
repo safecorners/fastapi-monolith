@@ -3,12 +3,11 @@ from contextlib import contextmanager
 from typing import Iterator
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import (Session, declarative_base, scoped_session,
-                            sessionmaker)
+from sqlalchemy.orm import Session, scoped_session, sessionmaker
+
+from application.database.orm import Base
 
 logger = logging.getLogger(__name__)
-
-Base = declarative_base()
 
 
 class Database:

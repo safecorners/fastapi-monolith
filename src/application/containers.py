@@ -7,7 +7,7 @@ from application.services import UserService
 
 
 class Container(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=["application.endpoints"])
+    wiring_config = containers.WiringConfiguration(modules=["application.routers.user_router"])
 
     config = providers.Configuration()
 

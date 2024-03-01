@@ -75,7 +75,7 @@ def test_get_by_id_404(client: TestClient) -> None:
     assert response.status_code == 404
 
 
-@mock.patch("application.services.uuid4", return_value="xyz")
+@mock.patch("application.services.user_service.uuid4", return_value="xyz")
 def test_add(_, client: TestClient) -> None:  # type: ignore[no-untyped-def]
     repository_mock = mock.Mock(spec=UserRepository)
     repository_mock.add.return_value = User(
