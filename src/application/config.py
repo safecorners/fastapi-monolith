@@ -15,7 +15,7 @@ class PostgresSettings(BaseSettings):
     @property
     def url(self) -> str:
         _dsn = PostgresDsn(
-            f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+            f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
         )
         return str(_dsn)
 
