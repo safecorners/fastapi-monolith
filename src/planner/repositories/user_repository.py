@@ -23,6 +23,11 @@ class UserRepository:
             if not user:
                 raise UserNotFoundError(user_id)
             return user
+            
+    def get_by_email(self, email: str) -> Optional[User]:
+        with self.session_factory() as session:
+            user = session.query(User).filter(User.email == email).first()
+            return user
 
     def add(self, email: str, password: str, is_active: bool = True) -> User:
         with self.session_factory() as session:
