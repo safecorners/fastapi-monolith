@@ -1,3 +1,4 @@
-from planner.database.sqlalchemy_database import Base, get_db_session, sessionmanager
+from planner.database.database import Database
+from planner.database.orm import Base
 
-__all__ = ["sessionmanager", "get_db_session", "Base"]
+__all__ = ["Database", "Base"]

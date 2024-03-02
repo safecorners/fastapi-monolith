@@ -1,11 +1,10 @@
 [tool.poetry]
-name = "fastapi-monolith-application"
+name = "fastapi-planner-application"
 version = "0.1.0"
-description = "fastapi monolith application demo"
+description = "fastapi planner application demo"
 authors = ["safecorners <safeconers.mobile@gmail.com>"]
 readme = "README.md"
 packages = [
-  {include = "application", from="src"},
   {include = "planner", from="src"}
 ]
 
