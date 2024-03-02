@@ -11,8 +11,8 @@ def create_app() -> FastAPI:
     db.create_database()
 
     app = FastAPI()
-    # app.container = container
-    setattr(app, "container", container)
+    app.container = container  # type: ignore[attr-defined]
+
     app.include_router(user_router)
     return app
 

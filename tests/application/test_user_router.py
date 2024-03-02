@@ -1,12 +1,11 @@
 from unittest import mock
 
 import pytest
-from fastapi.testclient import TestClient
-
 from application.application import app
 from application.exceptions import UserNotFoundError
 from application.models import User
 from application.repositories import UserRepository
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture
@@ -21,7 +20,7 @@ def test_get_list(client: TestClient) -> None:
         User(id=2, email="test2@email.com", hashed_password="pwd", is_active=False),
     ]
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.get("/users")
 
     assert response.status_code == 200
@@ -51,7 +50,7 @@ def test_get_by_id(client: TestClient) -> None:
         is_active=True,
     )
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.get("/users/1")
 
     assert response.status_code == 200
@@ -69,7 +68,7 @@ def test_get_by_id_404(client: TestClient) -> None:
     repository_mock = mock.Mock(spec=UserRepository)
     repository_mock.get_by_id.side_effect = UserNotFoundError(1)
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.get("/users/1")
 
     assert response.status_code == 404
@@ -85,7 +84,7 @@ def test_add(_, client: TestClient) -> None:  # type: ignore[no-untyped-def]
         is_active=True,
     )
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.post("/users")
 
     assert response.status_code == 201
@@ -102,7 +101,7 @@ def test_add(_, client: TestClient) -> None:  # type: ignore[no-untyped-def]
 def test_remove(client: TestClient) -> None:
     repository_mock = mock.Mock(spec=UserRepository)
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.delete("/users/1")
 
     assert response.status_code == 204
@@ -113,7 +112,7 @@ def test_remove_404(client: TestClient) -> None:
     repository_mock = mock.Mock(spec=UserRepository)
     repository_mock.delete_by_id.side_effect = UserNotFoundError(1)
 
-    with app.container.user_repository.override(repository_mock):
+    with app.container.user_repository.override(repository_mock):  # type: ignore[attr-defined]
         response = client.delete("/users/1")
 
     assert response.status_code == 404
