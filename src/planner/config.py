@@ -20,5 +20,9 @@ class PostgresSettings(BaseSettings):
         return str(_dsn)
 
 
+class JWTSettings(BaseSettings):
+    secret_key: str = Field(default="super-secret")
+
 class Settings(BaseSettings):
     postgres: SerializeAsAny[PostgresSettings] = PostgresSettings()
+    jwt: JWTSettings = JWTSettings()

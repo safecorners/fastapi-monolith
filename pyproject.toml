@@ -18,6 +18,12 @@ sqlalchemy = "^2.0.27"
 asyncpg = "^0.29.0"
 dependency-injector = "^4.41.0"
 psycopg2-binary = "^2.9.9"
+passlib = "^1.7.4"
+types-passlib = "^1.7.7.20240106"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.9"
+bcrypt = "^4.1.2"
+types-python-jose = "^3.3.4.20240106"
 
 
 [tool.poetry.group.test.dependencies]
@@ -40,7 +46,7 @@ addopts = [
     "-vv"
 ]
 pythonpath = ["src"]
-asyncio_mode = "auto"
+asyncio_mode = "strict"
 log_cli = true
 log_cli_level = "debug"
 

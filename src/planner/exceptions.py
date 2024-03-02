@@ -11,3 +11,9 @@ class UserNotFoundError(NotFoundError):
 
 class EventNotFoundError(NotFoundError):
     entity_name: str = "Event"
+
+class DuplicatedError(Exception):
+    ...
+
+class InvalidUsernameOrPasswordError(Exception):
+    ...
