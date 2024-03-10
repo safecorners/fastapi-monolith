@@ -1,16 +1,12 @@
-from contextlib import AbstractContextManager
-from typing import Callable, List, Optional
-
-from sqlalchemy.orm import Session
+from typing import List, Optional
 
 from planner.exceptions import EventNotFoundError
 from planner.models import Event
+from planner.database import SessionFactory
 
 
 class EventRepository:
-    def __init__(
-        self, session_factory: Callable[..., AbstractContextManager[Session]]
-    ) -> None:
+    def __init__(self, session_factory: SessionFactory) -> None:
         self._session_factory = session_factory
 
     def get_all(self) -> List[Event]:

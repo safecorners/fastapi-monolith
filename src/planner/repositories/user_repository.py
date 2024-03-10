@@ -1,16 +1,13 @@
-from contextlib import AbstractContextManager
-from typing import Callable, List, Optional
+from typing import List, Optional
 
-from sqlalchemy.orm import Session
 
 from planner.exceptions import UserNotFoundError
 from planner.models import User
+from planner.database import SessionFactory
 
 
 class UserRepository:
-    def __init__(
-        self, session_factory: Callable[..., AbstractContextManager[Session]]
-    ) -> None:
+    def __init__(self, session_factory: SessionFactory) -> None:
         self.session_factory = session_factory
 
     def get_all(self) -> List[User]:
@@ -23,7 +20,7 @@ class UserRepository:
             if not user:
                 raise UserNotFoundError(user_id)
             return user
-            
+
     def get_by_email(self, email: str) -> Optional[User]:
         with self.session_factory() as session:
             user = session.query(User).filter(User.email == email).first()
