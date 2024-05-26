@@ -1,9 +1,10 @@
 from typing import List, Optional
 
+from sqlalchemy import select
 
+from planner.database import SessionFactory
 from planner.exceptions import UserNotFoundError
 from planner.models import User
-from planner.database import SessionFactory
 
 
 class UserRepository:
@@ -12,7 +13,10 @@ class UserRepository:
 
     def get_all(self) -> List[User]:
         with self.session_factory() as session:
-            return session.query(User).all()
+            stmt = select(User)
+            result = session.execute(stmt)
+            users = list(result.scalars().all())
+            return users
 
     def get_by_id(self, user_id: int) -> User:
         with self.session_factory() as session:

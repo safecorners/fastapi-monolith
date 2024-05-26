@@ -1,8 +1,10 @@
-from typing import List, Optional
+from typing import List
 
+from sqlalchemy import select
+
+from planner.database import SessionFactory
 from planner.exceptions import EventNotFoundError
 from planner.models import Event
-from planner.database import SessionFactory
 
 
 class EventRepository:
@@ -11,12 +13,17 @@ class EventRepository:
 
     def get_all(self) -> List[Event]:
         with self._session_factory() as session:
-            return session.query(Event).all()
+            stmt = select(Event)
+            result = session.execute(stmt)
+            events = list(result.scalars().all())
+            return events
 
     def get_by_id(self, event_id: int) -> Event:
         with self._session_factory() as session:
-            event = session.query(Event).filter(Event.id == event_id).first()
-            if not event:
+            stmt = select(Event).where(Event.id == event_id)
+            result = session.execute(stmt)
+            event = result.scalars().first()
+            if event is None:
                 raise EventNotFoundError(event_id)
             return event
 
@@ -46,10 +53,10 @@ class EventRepository:
 
     def delete_by_id(self, event_id: int) -> None:
         with self._session_factory() as session:
-            foundEvent: Optional[Event] = (
-                session.query(Event).filter(Event.id == event_id).first()
-            )
-            if not foundEvent:
+            stmt = select(Event).where(Event.id == event_id)
+            result = session.execute(stmt)
+            foundEvent = result.scalars().first()
+            if foundEvent is None:
                 raise EventNotFoundError(event_id)
             session.delete(foundEvent)
             session.commit()
