@@ -2,8 +2,7 @@ from typing import Generator
 
 import pytest
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
-
+from fastapi.testclient import AsyncClient
 from planner.application import create_app
 
 
@@ -14,6 +13,6 @@ def app() -> Generator[FastAPI, None, None]:
 
 
 @pytest.fixture()
-def client(app: FastAPI) -> Generator[TestClient, None, None]:
-    with TestClient(app) as client:
+def client(app: FastAPI) -> Generator[AsyncClient, None, None]:
+    with AsyncClient(app) as client:
         yield client
