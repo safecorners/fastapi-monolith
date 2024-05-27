@@ -15,13 +15,14 @@ class PostgresSettings(BaseSettings):
     @property
     def url(self) -> str:
         _dsn = PostgresDsn(
-            f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+            f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
         )
         return str(_dsn)
 
 
 class JWTSettings(BaseSettings):
     secret_key: str = Field(default="super-secret")
+
 
 class Settings(BaseSettings):
     postgres: SerializeAsAny[PostgresSettings] = PostgresSettings()

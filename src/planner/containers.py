@@ -8,12 +8,11 @@ from planner.services import EventService, UserService
 
 
 class Container(containers.DeclarativeContainer):
-
     wiring_config = containers.WiringConfiguration(
         modules=[
             "planner.routers.user_router",
             "planner.routers.event_router",
-            "planner.auth.authenticate"
+            "planner.auth.authenticate",
         ]
     )
 
@@ -45,7 +44,11 @@ class Container(containers.DeclarativeContainer):
         jwt_handler=jwt_handler,
     )
 
-    event_service = providers.Factory(EventService, event_repository=event_repository)
+    event_service = providers.Factory(
+        EventService,
+        event_repository=event_repository,
+        user_repository=user_repository,
+    )
 
 
 def create_container() -> Container:
@@ -54,3 +57,6 @@ def create_container() -> Container:
     container.config.from_dict(settings.model_dump())
 
     return container
+
+
+container = create_container()

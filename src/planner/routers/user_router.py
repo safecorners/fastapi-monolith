@@ -18,14 +18,19 @@ from planner.services import UserService
 
 user_router = APIRouter(tags=["User"])
 
+
+@user_router.post("/signup", response_model=Dict[str, str])
 @inject
-def sign_up(payload: UserSignUpRequest, user_service: UserService = Depends(Provide[Container.user_service]),) -> Dict[str, str]:
+async def sign_up(
+    payload: UserSignUpRequest,
+    user_service: UserService = Depends(Provide[Container.user_service]),
+) -> Dict[str, str]:
     try:
-        user_service.sign_up(payload.email, payload.password)
+        await user_service.sign_up(payload.email, payload.password)
     except DuplicatedError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="User with supplied username exists"
+            detail="User with supplied username exists",
         )
 
     return {"message": "User created successfully."}
@@ -33,10 +38,13 @@ def sign_up(payload: UserSignUpRequest, user_service: UserService = Depends(Prov
 
 @user_router.post("/signin", response_model=TokenResponse)
 @inject
-def sign_in(payload: OAuth2PasswordRequestForm = Depends(), user_service: UserService = Depends(Provide[Container.user_service])) -> TokenResponse:
-    try :
-        return user_service.sign_in(payload.username, payload.password)
-    
+async def sign_in(
+    payload: OAuth2PasswordRequestForm = Depends(),
+    user_service: UserService = Depends(Provide[Container.user_service]),
+) -> TokenResponse:
+    try:
+        return await user_service.sign_in(payload.username, payload.password)
+
     except InvalidUsernameOrPasswordError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -46,20 +54,20 @@ def sign_in(payload: OAuth2PasswordRequestForm = Depends(), user_service: UserSe
 
 @user_router.get("/users", response_model=List[UserResponse])
 @inject
-def get_list(
+async def get_list(
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> List[User]:
-    return user_service.get_users()
+    return await user_service.get_users()
 
 
 @user_router.get("/users/{user_id}", response_model=UserResponse)
 @inject
-def get_by_id(
+async def get_by_id(
     user_id: int,
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> User:
     try:
-        return user_service.get_user_by_id(user_id)
+        return await user_service.get_user_by_id(user_id)
     except NotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
@@ -68,22 +76,22 @@ def get_by_id(
     "/users", status_code=status.HTTP_201_CREATED, response_model=UserResponse
 )
 @inject
-def add(
+async def add(
     user_service: UserService = Depends(
         Provide[Container.user_service],
     ),
 ) -> User:
-    return user_service.create_user()
+    return await user_service.create_user()
 
 
 @user_router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
-def remove(
+async def remove(
     user_id: int,
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> Response:
     try:
-        user_service.delete_user_by_id(user_id)
+        await user_service.delete_user_by_id(user_id)
     except NotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     else:

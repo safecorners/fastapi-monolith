@@ -1,5 +1,6 @@
+from contextlib import AbstractAsyncContextManager
 from typing import Callable
-from contextlib import AbstractContextManager
-from sqlalchemy.orm import Session
 
-SessionFactory = Callable[..., AbstractContextManager[Session]]
+from sqlalchemy.ext.asyncio import AsyncSession
+
+SessionFactory = Callable[..., AbstractAsyncContextManager[AsyncSession]]
