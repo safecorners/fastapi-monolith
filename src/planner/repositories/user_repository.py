@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional
 
 from sqlalchemy import select
@@ -6,44 +7,51 @@ from planner.database import SessionFactory
 from planner.exceptions import UserNotFoundError
 from planner.models import User
 
+logger = logging.getLogger(__name__)
+
 
 class UserRepository:
     def __init__(self, session_factory: SessionFactory) -> None:
         self.session_factory = session_factory
 
-    def get_all(self) -> List[User]:
-        with self.session_factory() as session:
+    async def get_all(self) -> List[User]:
+        logger.info("I Have Not Mocked!")
+        async with self.session_factory() as session:
             stmt = select(User)
-            result = session.execute(stmt)
+            result = await session.execute(stmt)
             users = list(result.scalars().all())
             return users
 
-    def get_by_id(self, user_id: int) -> User:
-        with self.session_factory() as session:
-            user = session.query(User).filter(User.id == user_id).first()
-            if not user:
+    async def get_by_id(self, user_id: int) -> User:
+        async with self.session_factory() as session:
+            stmt = select(User).where(User.id == user_id)
+            result = await session.execute(stmt)
+            user = result.scalars().first()
+            if user is None:
                 raise UserNotFoundError(user_id)
             return user
 
-    def get_by_email(self, email: str) -> Optional[User]:
-        with self.session_factory() as session:
-            user = session.query(User).filter(User.email == email).first()
+    async def get_by_email(self, email: str) -> Optional[User]:
+        async with self.session_factory() as session:
+            stmt = select(User).where(User.email == email)
+            result = await session.execute(stmt)
+            user = result.scalars().first()
             return user
 
-    def add(self, email: str, password: str, is_active: bool = True) -> User:
-        with self.session_factory() as session:
+    async def add(self, email: str, password: str, is_active: bool = True) -> User:
+        async with self.session_factory() as session:
             user = User(email=email, hashed_password=password, is_active=is_active)
             session.add(user)
-            session.commit()
-            session.refresh(user)
+            await session.commit()
+            await session.refresh(user)
             return user
 
-    def delete_by_id(self, user_id: int) -> None:
-        with self.session_factory() as session:
-            entity: Optional[User] = (
-                session.query(User).filter(User.id == user_id).first()
-            )
-            if not entity:
+    async def delete_by_id(self, user_id: int) -> None:
+        async with self.session_factory() as session:
+            stmt = select(User).where(User.id == user_id)
+            result = await session.execute(stmt)
+            user = result.scalars().first()
+            if user is None:
                 raise UserNotFoundError(user_id)
-            session.delete(entity)
-            session.commit()
+            await session.delete(user)
+            await session.commit()

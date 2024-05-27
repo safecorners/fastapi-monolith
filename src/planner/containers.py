@@ -8,12 +8,11 @@ from planner.services import EventService, UserService
 
 
 class Container(containers.DeclarativeContainer):
-
     wiring_config = containers.WiringConfiguration(
         modules=[
             "planner.routers.user_router",
             "planner.routers.event_router",
-            "planner.auth.authenticate"
+            "planner.auth.authenticate",
         ]
     )
 
@@ -54,3 +53,6 @@ def create_container() -> Container:
     container.config.from_dict(settings.model_dump())
 
     return container
+
+
+container = create_container()

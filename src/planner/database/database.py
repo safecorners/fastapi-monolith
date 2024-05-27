@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.pool import NullPool
 
 from planner.database.orm import Base
 
@@ -17,7 +18,13 @@ logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self, db_url: str) -> None:
-        self._engine = create_async_engine(db_url, echo=True)
+        # https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#using-multiple-asyncio-event-loops
+        # TODO: We only use multiple event loops when testing, so we need to remove this smell.
+        self._engine = create_async_engine(
+            db_url,
+            echo=True,
+            poolclass=NullPool,
+        )
         self._session_factory = async_scoped_session(
             async_sessionmaker(autocommit=False, autoflush=False, bind=self._engine),
             scopefunc=current_task,

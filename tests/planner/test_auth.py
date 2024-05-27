@@ -1,12 +1,11 @@
 import pytest
 from httpx import AsyncClient
 from planner.application import create_app
-from planner.containers import create_container
+from planner.containers import container
 
 
 @pytest.fixture(scope="module")
 def access_token() -> str:
-    container = create_container()
     jwt_handler = container.jwt_handler()
     return jwt_handler.create_access_token("test@example.com")
 

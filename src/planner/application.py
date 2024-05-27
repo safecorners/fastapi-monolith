@@ -3,19 +3,19 @@ from typing import AsyncIterator
 
 from fastapi import FastAPI
 
-from planner.containers import Container, create_container
+from planner.containers import Container, container
 from planner.routers import auth_router, event_router, user_router
-
-container: Container = create_container()
 
 
 @asynccontextmanager
 async def lifepsan(app: FastAPI) -> AsyncIterator[None]:
+    print("lifespan:startup")
     db = container.db()
     await db.drop_database()
     await db.create_database()
 
     yield
+    print("lifespan:shutdown")
 
 
 def create_app() -> FastAPI:
