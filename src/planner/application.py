@@ -3,7 +3,7 @@ from typing import AsyncIterator
 
 from fastapi import FastAPI
 
-from planner.containers import Container, container
+from planner.containers import container
 from planner.routers import auth_router, event_router, user_router
 
 

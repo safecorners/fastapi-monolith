@@ -44,7 +44,11 @@ class Container(containers.DeclarativeContainer):
         jwt_handler=jwt_handler,
     )
 
-    event_service = providers.Factory(EventService, event_repository=event_repository)
+    event_service = providers.Factory(
+        EventService,
+        event_repository=event_repository,
+        user_repository=user_repository,
+    )
 
 
 def create_container() -> Container:

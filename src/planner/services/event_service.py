@@ -1,13 +1,18 @@
 from typing import List
 
 from planner.models import Event
-from planner.repositories import EventRepository
+from planner.repositories import EventRepository, UserRepository
 from planner.schemas.event import EventUpdate
 
 
 class EventService:
-    def __init__(self, event_repository: EventRepository) -> None:
+    def __init__(
+        self,
+        event_repository: EventRepository,
+        user_repository: UserRepository,
+    ) -> None:
         self._event_repository = event_repository
+        self._user_repository = user_repository
 
     async def get_events(self) -> List[Event]:
         return await self._event_repository.get_all()
@@ -17,15 +22,19 @@ class EventService:
 
     async def create_event(
         self,
-        user_id: int,
+        username: str,
         title: str,
         image: str,
         description: str,
         tags: List[str],
         location: str,
     ) -> Event:
+        user = await self._user_repository.get_by_email(username)
+        if user is None:
+            raise Exception()
+
         return await self._event_repository.add(
-            user_id=user_id,
+            user_id=user.id,
             title=title,
             image=image,
             description=description,

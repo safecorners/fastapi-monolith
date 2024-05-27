@@ -3,6 +3,7 @@ from typing import List
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
+from planner.auth.authenticate import authenticate
 from planner.containers import Container
 from planner.exceptions import NotFoundError
 from planner.models import Event
@@ -39,16 +40,20 @@ async def get_event_by_id(
 @inject
 async def create_event(
     payload: EventResponse,
+    username: str = Depends(authenticate),
     event_service: EventService = Depends(Provide[Container.event_service]),
 ) -> Event:
-    return await event_service.create_event(
-        user_id=payload.user_id,
-        title=payload.title,
-        image=payload.image,
-        description=payload.description,
-        tags=payload.tags,
-        location=payload.location,
-    )
+    try:
+        return await event_service.create_event(
+            username=username,
+            title=payload.title,
+            image=payload.image,
+            description=payload.description,
+            tags=payload.tags,
+            location=payload.location,
+        )
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @event_router.put("/events/{event_id}", response_model=EventResponse)
@@ -61,7 +66,7 @@ async def update_event(
     try:
         return await event_service.update_event(
             event_id=event_id,
-            update_data=payload,
+            payload=payload,
         )
     except NotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)

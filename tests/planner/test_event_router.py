@@ -4,14 +4,21 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient
 from planner.application import app
+from planner.containers import container
 from planner.exceptions import EventNotFoundError
-from planner.models import Event
-from planner.repositories import EventRepository
+from planner.models import Event, User
+from planner.repositories import EventRepository, UserRepository
 
 
 @pytest_asyncio.fixture
 async def client() -> AsyncClient:
     yield AsyncClient(app=app, base_url="http://test")
+
+
+@pytest.fixture
+def access_token() -> str:
+    jwt_handler = container.jwt_handler()
+    return jwt_handler.create_access_token("test@example.com")
 
 
 @pytest.mark.asyncio
@@ -99,7 +106,7 @@ async def test_get_event_by_id_404(client: AsyncClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_create_event(client: AsyncClient) -> None:
+async def test_create_event(client: AsyncClient, access_token: str) -> None:
     event_repository_mock = mock.AsyncMock(spec=EventRepository)
     event_repository_mock.add.return_value = Event(
         id=1,
@@ -110,16 +117,34 @@ async def test_create_event(client: AsyncClient) -> None:
         location="location1",
     )
 
-    with app.container.event_repository.override(event_repository_mock):  # type: ignore[attr-defined]
+    user_repository_mock = mock.AsyncMock(spec=UserRepository)
+    user_repository_mock.get_by_email.return_value = User(
+        id=1,
+        email="test@example.com",
+        hashed_password="hashed_password",
+        is_active=True,
+    )
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+    }
+
+    with (
+        app.container.event_repository.override(event_repository_mock),  # type: ignore[attr-defined]
+        app.container.user_repository.override(user_repository_mock),  # type: ignore[attr-defined]
+    ):
         response = await client.post(
             "/events/",
             json={
+                "id": 1,
                 "title": "Event 1",
                 "image": "image1",
                 "description": "description1",
                 "tags": ["tag1"],
                 "location": "location1",
             },
+            headers=headers,
         )
 
     assert response.status_code == 201
